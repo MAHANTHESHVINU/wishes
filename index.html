@@ -684,7 +684,7 @@
 <canvas id="balloonCanvas"></canvas>
 
 <!-- MUSIC BUTTON -->
-<audio id="bgMusic" loop>
+<audio id="bgMusic" loop preload="auto">
   <source src="music1.mp3" type="audio/mpeg">
 </audio>
 <button id="musicBtn" title="Toggle music" onclick="toggleMusic()">♪</button>
@@ -879,30 +879,44 @@ function startTyping(){
 
 /* ── MUSIC ── */
 
-const music=document.getElementById('bgMusic');
+const music = document.getElementById('bgMusic');
+const btn = document.getElementById('musicBtn');
 
-function toggleMusic(){
+function startMusic() {
 
-  const btn=document.getElementById('musicBtn');
+  music.volume = 0.6;
 
-  if(music.paused){
+  music.play()
+    .then(() => {
+      btn.innerHTML = '♫';
+      btn.classList.add('playing');
+    })
+    .catch(err => {
+      console.log("Autoplay blocked:", err);
+    });
+
+  document.removeEventListener('click', startMusic);
+}
+
+document.addEventListener('click', startMusic);
+
+function toggleMusic() {
+
+  if (music.paused) {
 
     music.play();
 
-    btn.innerHTML='♫';
-
+    btn.innerHTML = '♫';
     btn.classList.add('playing');
 
   } else {
 
     music.pause();
 
-    btn.innerHTML='♪';
-
+    btn.innerHTML = '♪';
     btn.classList.remove('playing');
   }
 }
-
 /* ── COUNTDOWN ── */
 function updateCountdown(){
   const now=new Date();
